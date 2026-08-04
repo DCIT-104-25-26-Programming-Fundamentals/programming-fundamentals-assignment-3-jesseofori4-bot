@@ -84,4 +84,88 @@
 // YOUR CODE BELOW — remove the // symbols from the scaffold and fill it in
 // =============================================================================
 
-
+const readlineSync = require('readline-sync');
+const students = [];
+// -----------------------------------------------------------------------------
+function calculateAverage(scores) {
+  if (scores.length === 0) return 0;
+  const sum = scores.reduce((acc, score) => acc + score, 0);
+  return sum / scores.length;
+}
+// 1. Add a Student
+function addStudent() {
+  const name = readlineSync.question('Student name: ');
+  const id = parseInt(readlineSync.question('Student ID: '), 10);
+  const numScores = parseInt(readlineSync.question('How many scores? '), 10);
+  const scores = [];
+    for (let i = 0; i < numScores; i++) {
+      const score = parseInt(readlineSync.question(`Enter score ${i + 1}: `), 10);
+      scores.push(score);
+    }
+  const student = { name, id, scores };
+  students.push(student);
+  console.log(`Student "${name}" added successfully.`);
+}
+// 2. Display All Students
+function displayAllStudents() {
+  if (students.length === 0) {
+    console.log('No students found.');
+    return;
+  }
+  console.log('Student Records:');
+  console.log('==================');
+  students.forEach(student => {
+    const average = calculateAverage(student.scores).toFixed(2);
+    console.log(`Name: ${student.name}`);
+    console.log(`ID: ${student.id}`);
+    console.log(`Scores: ${student.scores.join(', ')}`);
+    console.log(`Average: ${average}`);
+    console.log('------------------');
+  });
+}
+// 3. Calculate Average Score for a Specific Student
+function calculateStudentAverage() {
+  const id = parseInt(readlineSync.question('Enter student ID: '), 10);
+  const student = students.find(s => s.id === id);
+  if (!student) {
+    console.log('Student not found.');
+    return;
+  }
+  const average = calculateAverage(student.scores).toFixed(2);
+  console.log(`${student.name}'s average score: ${average}`);
+}
+// Display the menu and handle user input
+function displayMenu() {
+  console.log('===============================');
+  console.log('      STUDENT RECORD SYSTEM MENU');
+  console.log('===============================');
+  console.log('1. Add student');
+  console.log('2. Display all students');
+  console.log('3. Calculate average score');
+  console.log('4. Quit');
+}
+// Main program 
+function main() {
+    let choice;
+    do {
+        displayMenu();
+        choice = readlineSync.question('Enter your choice (1-4): ');
+        switch (choice) {
+            case '1':
+                addStudent();
+                break;
+            case '2':
+                displayAllStudents();
+                break;
+            case '3':
+                calculateStudentAverage();
+                break;
+            case '4':
+                console.log('Goodbye!');
+                break;
+            default:
+                console.log('Invalid choice. Please enter a number between 1 and 4.');
+        }
+    } while (choice !== '4');
+}
+main();
